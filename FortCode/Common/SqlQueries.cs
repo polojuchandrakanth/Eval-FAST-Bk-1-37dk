@@ -1,0 +1,30 @@
+﻿
+namespace FortCode.Common
+{
+    public static class SqlQueries
+    {
+        public const string InsertUserQuery = @"INSERT INTO Fort_Users
+                                                VALUES (
+	                                                @username
+	                                                ,@password
+	                                                ,@email
+	                                                )";
+
+		public const string AuthenticateUserQuery = @"SELECT Idx as Id,UserName as Name, Email, Password
+																FROM Fort_Users WITH (NOLOCK)
+																WHERE Email = @email
+																	AND [Password] = @password";
+		public const string GetAllCountryByUserQuery = @"SELECT Country  AS CountryName
+														,City
+													FROM Fort_Users_FavoriteCity WITH (NOLOCK)
+													WHERE userId = @Id";
+
+		public const string InsertCountryQuery = @"INSERT INTO Fort_Users_FavoriteCity
+                                                VALUES (
+	                                                @userId
+	                                                ,@CountryName
+	                                                ,@City
+	                                                )";
+
+	}
+}
