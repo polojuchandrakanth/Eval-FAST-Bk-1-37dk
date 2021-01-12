@@ -6,5 +6,6 @@
         public const string AddUserRoute = "adduser";        
         public const string GetCountryRoute = "getcountry";
         public const string AddCountryRoute = "addcountry";
+        public const string DeleteCountryRoute = "deletecountry";
     }
 }

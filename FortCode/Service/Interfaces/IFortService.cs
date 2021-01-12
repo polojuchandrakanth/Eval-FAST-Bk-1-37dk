@@ -11,6 +11,7 @@ namespace FortCode.Service.Interfaces
 
         Task<User> AuthenticateUserAsync(User authenticateUser);
         Task<List<Country>> GetAllCountryByUserAsync(int id);
-        Task<int> AddCountryAsync(AddCountryRequest addCountryRequest, int userId);
+        Task<int> AddCountryAsync(List<AddCountryRequest> addCountryRequest, int userId);
+        Task<int> DeleteCountryAsync(int CountryID);
     }
 }

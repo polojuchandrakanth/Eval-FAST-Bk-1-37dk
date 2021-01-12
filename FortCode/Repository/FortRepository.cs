@@ -72,7 +72,7 @@ namespace FortCode.Repository.FortRepository
             }
         }
 
-        public async Task<int> AddCountryAsync(AddCountryRequest addCountryRequest, int userId)
+        public async Task<int> AddCountryAsync(List<AddCountryRequest> addCountryRequest, int userId)
         {
             try
             {
@@ -80,12 +80,16 @@ namespace FortCode.Repository.FortRepository
                 {
                     using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                     {
-                        var rowsAffected = await databaseConnection.ExecuteAsync(SqlQueries.InsertCountryQuery, new
+                        var dynamicpar = new List<DynamicParameters>();
+                        foreach (var item in addCountryRequest)
                         {
-                            userId,
-                            addCountryRequest.CountryName,
-                            addCountryRequest.City
-                        });
+                            var param = new DynamicParameters();
+                            param.Add("@userId", userId);
+                            param.Add("@CountryName", item.CountryName);
+                            param.Add("@City", item.City);
+                            dynamicpar.Add(param);
+                        }
+                        var rowsAffected = await databaseConnection.ExecuteAsync(SqlQueries.InsertCountryQuery, dynamicpar);
                         transaction.Complete();
                         return rowsAffected;
                     }
@@ -106,6 +110,30 @@ namespace FortCode.Repository.FortRepository
                 {
                     var userCountryData = await databaseConnection.QueryAsync<Country>(SqlQueries.GetAllCountryByUserQuery, new { id });
                     return userCountryData.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<int> DeleteCountryAsync(int CountryID)
+        {
+            try
+            {
+                using (var databaseConnection = _dbConnectionFactory.GetConnection())
+                {
+                    using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                    {
+                        var rowsAffected = await databaseConnection.ExecuteAsync(SqlQueries.DeleteCountry, new
+                        {
+                            CountryID
+                        });
+                        transaction.Complete();
+                        return rowsAffected;
+                    }
+
                 }
             }
             catch (Exception ex)

@@ -14,7 +14,7 @@ namespace FortCode.Common
 																FROM Fort_Users WITH (NOLOCK)
 																WHERE Email = @email
 																	AND [Password] = @password";
-		public const string GetAllCountryByUserQuery = @"SELECT Country  AS CountryName
+		public const string GetAllCountryByUserQuery = @"SELECT CountryID, Country  AS CountryName
 														,City
 													FROM Fort_Users_FavoriteCity WITH (NOLOCK)
 													WHERE userId = @Id";
@@ -25,6 +25,10 @@ namespace FortCode.Common
 	                                                ,@CountryName
 	                                                ,@City
 	                                                )";
+
+		public const string DeleteCountry = @"DELETE
+												FROM Fort_Users_FavoriteCity
+												WHERE CountryID = @CountryID";
 
 	}
 }

@@ -31,7 +31,7 @@ namespace FortCode.Controller
             try
             {
                 var response = await _fortService.AddUserAsync(addUserRequest);
-                return response > 0 ? Ok("Success") : StatusCode(StatusCodes.Status422UnprocessableEntity,"User Creation Failed");
+                return response > 0 ? Ok("Success") : StatusCode(StatusCodes.Status422UnprocessableEntity, "User Creation Failed");
             }
             catch (Exception ex)
             {
@@ -42,13 +42,13 @@ namespace FortCode.Controller
         [HttpPost]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [Route(Routes.AddCountryRoute)]
-        public async Task<IActionResult> AddCountryAsync([FromBody] AddCountryRequest addCountryRequest)
+        public async Task<IActionResult> AddCountryAsync([FromBody] List<AddCountryRequest> addCountryRequest)
         {
             try
             {
                 var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
                 var Claim = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
-                var response = await _fortService.AddCountryAsync(addCountryRequest,Claim != null ? Convert.ToInt32(Claim.Value) : 0);
+                var response = await _fortService.AddCountryAsync(addCountryRequest, Claim != null ? Convert.ToInt32(Claim.Value) : 0);
                 return response > 0 ? Ok("Success") : StatusCode(StatusCodes.Status422UnprocessableEntity, "User Creation Failed");
             }
             catch (Exception ex)
@@ -66,12 +66,28 @@ namespace FortCode.Controller
             {
                 var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
                 var Claim = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
-                var user = await _fortService.GetAllCountryByUserAsync(Claim != null ? Convert.ToInt32(Claim.Value) : 0);
+                var user = await _fortService.GetAllCountryByUserAsync(Claim.Value == null ? 0 : Convert.ToInt32(Claim.Value));
 
                 if (user == null)
                     return BadRequest(new { message = "Username or password is incorrect" });
 
                 return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [Route(Routes.DeleteCountryRoute)]
+        public async Task<IActionResult> DeleteCountryAsync(int CountryID)
+        {
+            try
+            {
+                var response = await _fortService.DeleteCountryAsync(CountryID);
+                return response > 0 ? Ok("Country Deleted Successfully") : StatusCode(StatusCodes.Status422UnprocessableEntity, "Country Deleted Failed");
             }
             catch (Exception ex)
             {

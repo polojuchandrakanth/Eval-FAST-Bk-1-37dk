@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="Common\test.cs" />
       <Compile Remove="Helpers\ExtensionMethods.cs" />
     </ItemGroup>
 

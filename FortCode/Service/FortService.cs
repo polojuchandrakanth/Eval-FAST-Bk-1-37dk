@@ -2,12 +2,14 @@
 using FortCode.Model.Request;
 using FortCode.Repository.Interfaces;
 using FortCode.Service.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FortCode.Service
 {
-    public class FortService: IFortService
+    public class FortService : IFortService
     {
         private readonly IFortRepository _fortRepository;
 
@@ -18,6 +20,10 @@ namespace FortCode.Service
 
         public async Task<int> AddUserAsync(AddUserRequest addUserRequest)
         {
+            if (string.IsNullOrEmpty(addUserRequest.Email))
+            {
+                throw new ArgumentNullException(nameof(addUserRequest.Email));
+            }
             return await _fortRepository.AddUserAsync(addUserRequest);
         }
 
@@ -36,9 +42,18 @@ namespace FortCode.Service
             return await _fortRepository.GetAllCountryByUserAsync(id);
         }
 
-        public async Task<int> AddCountryAsync(AddCountryRequest addCountryRequest, int userId)
+        public async Task<int> AddCountryAsync(List<AddCountryRequest> addCountryRequest, int userId)
         {
-            return await _fortRepository.AddCountryAsync(addCountryRequest,userId);
+            if (addCountryRequest.Count() == 0)
+            {
+                throw new ArgumentNullException("Empty Data");
+            }
+            return await _fortRepository.AddCountryAsync(addCountryRequest, userId);
+        }
+
+        public async Task<int> DeleteCountryAsync(int CountryID)
+        {
+            return await _fortRepository.DeleteCountryAsync(CountryID);
         }
     }
 }
