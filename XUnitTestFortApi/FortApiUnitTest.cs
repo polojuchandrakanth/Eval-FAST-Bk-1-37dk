@@ -19,12 +19,18 @@ namespace XUnitTestFortApi
         [Fact]
         public async Task AddUserAsync_FailedResult()
         {
+            // Fixture are used to create a fixed environment in which tests are run so that results are repeatable.
             var fixture = new Fixture();
+            //Mock object that will bypass the checking function
             var repoMock = new Mock<IFortRepository>();
+            // This code is used to generate a random user details which all the properties which are there in the Class AddUserRequest.
             var addUserRequest = fixture.Create<AddUserRequest>();
+            //repoMock.Setup is used to get the reponse from the AddUserAsync without calling to a DB (FortRepository), in this ReturnsAsync is the return value from this method.
             repoMock.Setup(c => c.AddUserAsync(addUserRequest)).ReturnsAsync(0);
             var serviceObject = new FortService(repoMock.Object);
+            //This is used for calling AddUserAsync method in FortService class but here we'll get the response what we've intiliaze in repoMock.Setup
             var actualResult = await serviceObject.AddUserAsync(addUserRequest);
+            //It will going to compare the values
             Assert.Equal(0, actualResult);
         }
         [Fact]
