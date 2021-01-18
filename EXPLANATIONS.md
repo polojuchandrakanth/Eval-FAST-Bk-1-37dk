@@ -6,8 +6,8 @@
 --> Missed launchSettings.josn file added it.
 
 ### API EXPLANATIONS
---> Please refer the File "FortApiExplanation" location in Main Project Folder.
+--> Please refer "FortApiExplanation.json" file from the main project folder.
 
 #### Test Coverage (Unit Testing)
---> Please refer the Folder "XUnitTestFortApi" location in Main Project Folder.
+--> Please refer "XUnitTestFortApi" folder from the main project folder.
 --> In this we've used AutoFixture, FluentAssertions, Moq for achieving the XUnitTesting
